@@ -1,0 +1,27 @@
+{
+  "name": "meituimageupload",
+  "version": "0.0.1",
+  "description": "upload images",
+  "scripts": {
+    "start": "webpack-dev-server --open --confg config/webpack.dev.js",
+    "build": "webpack --config config/webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hzjjg/MeituImageUpload.git"
+  },
+  "author": "hzj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hzjjg/MeituImageUpload/issues"
+  },
+  "homepage": "https://github.com/hzjjg/MeituImageUpload#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "html-webpack-plugin": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15",
+    "webpack-merge": "^4.1.2"
+  }
+}
