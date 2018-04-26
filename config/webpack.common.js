@@ -8,7 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
-        app:'./src/index.ts'
+        app: './src/main.ts'
     },
     module: {
         rules: [
@@ -19,35 +19,35 @@ module.exports = {
             },
             {
                 // test: /\.scss$/,
-                include:[helper.root('src/style.scss')],
-                use:ExtractTextPlugin.extract({
-                    fallback:'style-loader',
-                    use:['css-loader','sass-loader']
+                include: [helper.root('src/style.scss')],
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'sass-loader']
                 })
             },
             {
-                test:/\.jade$/,
-                use:'pug-loader'
+                test: /\.jade$/,
+                use: 'pug-loader'
             },
             {
-                test:/\.(jpg|png|gif)$/,
-                use:'file-loader'
+                test: /\.(jpg|png|gif)$/,
+                use: 'file-loader'
             }, {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use : "url-loader?limit=10000&minetype=application/font-woff"
+                use: "url-loader?limit=10000&minetype=application/font-woff"
             }, {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use : "file-loader"
+                use: "file-loader"
             }
         ]
     },
-    resolve:{
-        extensions:['.tsx','.ts','.js','.json']
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js', '.json']
     },
-    plugins:[
+    plugins: [
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
-            template:'./src/index.html'
+            template: './src/index.html'
         }),
         new ExtractTextPlugin('style.css'),
         new webpack.NamedModulesPlugin(),
