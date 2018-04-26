@@ -1,8 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helper = require('./helper');
-const webpack = require('webpack');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -24,6 +24,10 @@ module.exports = {
                     fallback:'style-loader',
                     use:['css-loader','sass-loader']
                 })
+            },
+            {
+                test:/\.jade$/,
+                use:'pug-loader'
             },
             {
                 test:/\.(jpg|png|gif)$/,
@@ -48,5 +52,6 @@ module.exports = {
         new ExtractTextPlugin('style.css'),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        // new webpack.optimize.SplitChunksPlugin()
     ]
 };
