@@ -9,7 +9,12 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "es2017",
+        ]
     },
     "include": [
         "src/**/*"

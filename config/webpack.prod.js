@@ -12,6 +12,6 @@ module.exports = merge(common, {
     output:{
         path:helper.root('dist'),
         publicPath:'/',
-        filename:'[name].js'
-    },
+        filename:'[name].[hash:8].js'
+    }
 });

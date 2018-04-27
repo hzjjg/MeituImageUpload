@@ -1,16 +1,136 @@
-body{
-    padding: 50px;
-    background-color: azure;
-}
+@import 'mixins';
 
 .uploader{
+    text-align: center;
+    padding-top: 20px;
     &_label{
         display: inline-block;
-        margin-top: 10px;
         padding: 10px;
         border: 1px solid #666;
         border-radius: 4px;
         cursor: pointer;
     }
+}
+
+.result{
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    &_header{
+        padding-bottom: 10px;
+        text-align: center;
+    }
+    &_total{
+
+    }
+    &_completed{
+        color: green;
+    }
+}
+.images{
+    overflow: hidden;
+    border-color: azure;
+    min-height: 400px;
+}
+.imageItem{
+    float: left;
+    margin: 20px;
+    padding: 10px;
+    width: 220px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+    &_img{
+        display: flex;
+        align-items: center;
+        height: 200px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #999;
+        img{
+            width: 100%;
+            height: auto;
+        }
+    }
+    &_img-long{
+        img{
+            height: 100%;
+            width: auto;
+            margin: 0 auto;
+        }
+    }
+    &_img-origin{
+        img{
+            height: auto;
+            width: auto;
+            margin: 0 auto;
+        }
+    }
+    &_img-loading{
+        background-color: #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &::after{
+            content: "loading...";
+            color: #999;
+        }
+    }
+    &_info{
+        overflow: hidden;
+        font-size: 12px;
+        font-weight: normal;
+    }
+    &_filename{
+        @include text-truncate();
+    }
+    &_data{
+        margin-top: 5px;
+        display: flex;
+    }
+    &_width{
+
+    }
+    &_height{
+        margin-left: 10px;
+    }
+    &_size{
+
+    }
+    &_footer{
+        margin-top: 5px;
+        font-size: 12px;
+        font-weight: normal;
+    }
+    &_url{
+        @include text-truncate();        
+    }
+    &_copy{
+        display: block;
+        width: 100%;
+        margin-top: 5px;
+        text-align: center;
+        color: #333;
+        border: 1px solid #333;
+        border-radius: 2px;
+        line-height: 24px;
+        text-decoration: none;
+        outline: none;
+        &:hover{
+            background-color: #eee;
+        }
+        &:active{
+            background-color: #ddd
+        }
+    }
+}
+
+.uploading{
+    display: none;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    color: #999;
 }
 

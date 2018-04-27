@@ -47,9 +47,10 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
+            hash:true,
             template: './src/index.html'
         }),
-        new ExtractTextPlugin('style.css'),
+        new ExtractTextPlugin('style.[hash:8].css'),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         // new webpack.optimize.SplitChunksPlugin()

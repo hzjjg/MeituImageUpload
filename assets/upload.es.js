@@ -1714,5 +1714,5 @@ var upload = function () {
     return upload;
 }();
 
-export default upload;
+export {upload};
 //# sourceMappingURL=upload.es.js.map

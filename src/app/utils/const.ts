@@ -1,4 +1,9 @@
+/**
+ *  上传图片平台类型
+ */
 export enum UploadType {
-    QINIU = 0,
-    MEITU = 1
+    ALIYUN = 0,
+    QINIU = 1,
+    AMAZON = 2,
+    MEITU = 3
 }
