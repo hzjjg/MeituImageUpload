@@ -6,17 +6,19 @@ export class IndexPage {
     private $uploader: JQuery;
     private uploader: upload;
     private uploadOptions: UploadOptions;
-    private parentProtocol:boolean = true;
-    private currentCopyUrl:string = '';
-    
+    private parentProtocol: boolean = true;
+    private currentCopyUrl: string = '';
+    private isAutoImageSize: boolean = true;
+
     private _uploading: boolean = false;
     private _imageCount: number = 0;
     private _uploadedImageCount: number = 0;
 
     constructor() {
         this.uploadOptions = {
-            timeout: 1000,
-            type: UploadType.MEITU
+            timeout: 10000,
+            type: UploadType.MEITU,
+            quality: 100,
         }
         this.$uploader = $('#upload');
         this.uploadOptions = {
@@ -30,9 +32,9 @@ export class IndexPage {
     }
 
     public set uploading(v: boolean) {
-        if(!v){
+        if (!v) {
             $('.uploading').hide();
-        }else{
+        } else {
             $('.uploading').show();
         }
         this._uploading = v;
@@ -55,7 +57,7 @@ export class IndexPage {
     }
 
     public set uploadedImageCount(v: number) {
-        $('.result_completed').html(<any>v);        
+        $('.result_completed').html(<any>v);
         this._uploadedImageCount = v;
     }
 
@@ -63,31 +65,31 @@ export class IndexPage {
         this.$uploader.change((e) => {
             let files = (<any>e.target).files;
             if (files) {
-                this.doUpload(files).then(() => {
-                    console.log('success');
+                this.uploadAll(files).then(() => {
+                    // console.log('success');
                 }).catch((e) => {
                     console.log(e);
                 })
             }
         })
-        document.addEventListener('copy',(e)=>{
-            try{
+        document.addEventListener('copy', (e) => {
+            try {
                 (<any>e).clipboardData.setData('text/plain', this.currentCopyUrl);
                 e.preventDefault(); // default behaviour is to copy any selected text
-            }catch(e){
+            } catch (e) {
                 console.log(e);
-                
+
             }
         })
     }
 
-    private async doUpload(files: File[]) {
+    private async uploadAll(files: File[]) {
         this.clearImage();
         this.uploading = true;
         this.imageCount = files.length;
         for (const file of files) {
             try {
-                let imageItem = await this.uploadImg(file);
+                let imageItem = await this.doUpload(file);
                 this.renderImage(imageItem);
                 this.uploadedImageCount += 1;
             } catch (e) {
@@ -97,14 +99,31 @@ export class IndexPage {
         this.uploading = false;
     }
 
-    private uploadImg(file: File): Promise<ImageItem> {
+    private async doUpload(file: File) {
+        let imageItem: ImageInfo = {};
+        let originImageItem: ImageInfo;
+        let currentImageItem: ImageInfo;
+        let options:UploadOptions = {};
+
+        originImageItem = await this.readImageFile(file);
+        if(this.isAutoImageSize){
+            options = Object.assign({},this.uploadOptions,{
+                width:originImageItem.originWidth,
+            })
+        }
+        currentImageItem = await this.uploadImage(file,options);
+        imageItem = Object.assign(imageItem, originImageItem, currentImageItem);
+        return imageItem;
+    }
+
+    private uploadImage(file: File, options?: any): Promise<ImageInfo> {
+        let uploader = new upload(Object.assign({}, this.uploadOptions, options))
         return new Promise((resolve, reject) => {
-            this.uploader.up(file, (data) => {
-                resolve({
-                    originFileName: file.name,
+            uploader.up(file, (data) => {
+                let imageItem: ImageInfo = {
                     url: data.img,
-                    size:file.size
-                });
+                }
+                resolve(imageItem);
             }, (error) => {
                 reject(error);
             }, () => {
@@ -115,21 +134,41 @@ export class IndexPage {
         })
     }
 
-    private clearImage(){
+    private readImageFile(file: File): Promise<ImageInfo> {
+        let reader = new FileReader();
+        reader.readAsDataURL(file)
+        return new Promise((reoslve, reject) => {
+            reader.onload = (e: any) => {
+                let data = e.target.result;
+                let image = new Image();
+                image.src = data;
+                image.onload = () => {
+                    reoslve({
+                        originFileName: file.name,
+                        originWidth: image.width,
+                        originHeight: image.height,
+                        originSize: file.size
+                    })
+                }
+            }
+        })
+    }
+
+    private clearImage() {
         this.uploadedImageCount = 0;
         this.imageCount = 0;
         $('.images').html('');
     }
 
-    private renderImage(imageItem: ImageItem) {
+    private renderImage(imageItem: ImageInfo) {
         let image = new Image();
         let fragment = document.createDocumentFragment();
         let $imgItem = $(document.createElement('div'));
-        let parsedUrl:string;
-        
-        if(this.parentProtocol){
+        let parsedUrl: string;
+
+        if (this.parentProtocol) {
             let index = imageItem.url.indexOf('://');
-            parsedUrl = imageItem.url.substr(index+1);
+            parsedUrl = imageItem.url.substr(index + 1);
         }
         let template = `
             <div class="imageItem_img imageItem_img-loading"></div>
@@ -153,7 +192,7 @@ export class IndexPage {
         $('.images')[0].appendChild(fragment);
 
         //绑定事件
-        $imgItem.find('.js-copy').click((e)=>{
+        $imgItem.find('.js-copy').click((e) => {
             this.currentCopyUrl = $imgItem.find('.imageItem_url').html()
             document.execCommand('copy');
         })
@@ -164,17 +203,16 @@ export class IndexPage {
             let $img = $imgItem.find('.imageItem_img');
             let width = image.width;
             let height = image.height;
-            if(height<200 && width<200){
-                $img.addClass('imageItem_img-origin');                
-            }else if(height > width){
+            if (height < 200 && width < 200) {
+                $img.addClass('imageItem_img-origin');
+            } else if (height > width) {
                 $img.addClass('imageItem_img-long');
             }
             $img.removeClass('imageItem_img-loading');
             $imgItem.find('.imageItem_width').html(`width:${width}px`);
             $imgItem.find('.imageItem_height').html(`height:${height}px`);
-            console.log(image.width);
             $img.append(image);
-            
+
         }
     }
 
@@ -183,8 +221,13 @@ export class IndexPage {
     }
 }
 
-interface ImageItem {
-    originFileName: string;
-    url: string;
-    size?: number;
+interface ImageInfo {
+    originFileName?: string;
+    url?: string;
+    originSize?: number;
+    width?: number;
+    height?: number;
+    originHeight?: number;
+    originWidth?: number;
+
 }
