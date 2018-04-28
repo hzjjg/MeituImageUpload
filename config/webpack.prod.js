@@ -4,6 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common');
 const helper = require('./helper');
 
+
 module.exports = merge(common, {
     mode:'production',    
     plugins: [
@@ -11,7 +12,7 @@ module.exports = merge(common, {
     ],
     output:{
         path:helper.root('dist'),
-        publicPath:'/',
+        publicPath:helper.root('dist/'),
         filename:'[name].[hash:8].js'
     }
 });
