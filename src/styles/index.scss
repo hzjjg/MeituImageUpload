@@ -42,12 +42,14 @@
     border-radius: 4px;
     overflow: hidden;
     &_img{
-        display: flex;
-        align-items: center;
         height: 200px;
         margin-bottom: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid #999;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img{
             width: 100%;
             height: auto;
@@ -68,12 +70,16 @@
         }
     }
     &_img-loading{
-        background-color: #ddd;
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
         &::after{
             content: "loading...";
+            font-weight: normal;
+            text-align: center;
+            font-size: 14px;
+            margin-top: -5px;
             color: #999;
         }
     }
@@ -123,6 +129,10 @@
         &:active{
             background-color: #ddd
         }
+    }
+    &_link{
+        max-height: 100%;
+        max-width: 100%;
     }
 }
 

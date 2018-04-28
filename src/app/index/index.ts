@@ -92,8 +92,8 @@ export class IndexPage {
                 let imageItem = await this.doUpload(file);
                 this.renderImage(imageItem);
                 this.uploadedImageCount += 1;
-            } catch (e) {
-                console.log(e);
+            } catch (error) {
+                console.log(error);
             }
         }
         this.uploading = false;
@@ -160,20 +160,22 @@ export class IndexPage {
         $('.images').html('');
     }
 
-    private renderImage(imageItem: ImageInfo) {
+    private renderImage(imageInfo: ImageInfo) {
         let image = new Image();
         let fragment = document.createDocumentFragment();
         let $imgItem = $(document.createElement('div'));
         let parsedUrl: string;
 
         if (this.parentProtocol) {
-            let index = imageItem.url.indexOf('://');
-            parsedUrl = imageItem.url.substr(index + 1);
+            let index = imageInfo.url.indexOf('://');
+            parsedUrl = imageInfo.url.substr(index + 1);
         }
         let template = `
-            <div class="imageItem_img imageItem_img-loading"></div>
+            <div class="imageItem_img imageItem_img-loading">
+                <a class="imageItem_link" href="${imageInfo.url}" target="_blank"></a>
+            </div>
             <div class="imageItem_info">
-                <div class="imageItem_filename" title="${imageItem.originFileName}">${imageItem.originFileName}</div>
+                <div class="imageItem_filename" title="${imageInfo.originFileName}">${imageInfo.originFileName}</div>
                 <div class="imageItem_data">
                     <span class="imageItem_width"></span>
                     <span class="imageItem_height"></span>
@@ -198,7 +200,7 @@ export class IndexPage {
         })
 
         //加载图片
-        image.src = imageItem.url;
+        image.src = imageInfo.url;
         image.onload = () => {
             let $img = $imgItem.find('.imageItem_img');
             let width = image.width;
@@ -211,7 +213,7 @@ export class IndexPage {
             $img.removeClass('imageItem_img-loading');
             $imgItem.find('.imageItem_width').html(`width:${width}px`);
             $imgItem.find('.imageItem_height').html(`height:${height}px`);
-            $img.append(image);
+            $img.find('.imageItem_link').append(image);
 
         }
     }
