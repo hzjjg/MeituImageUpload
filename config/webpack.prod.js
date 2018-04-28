@@ -12,7 +12,8 @@ module.exports = merge(common, {
     ],
     output:{
         path:helper.root('dist'),
-        publicPath:'/dist',
+        //for github page
+        publicPath:'/MeituImageUpload/dist',
         filename:'[name].[hash:8].js'
     }
 });
