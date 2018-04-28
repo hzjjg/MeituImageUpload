@@ -12,7 +12,7 @@ module.exports = merge(common, {
     ],
     output:{
         path:helper.root('dist'),
-        publicPath:helper.root('dist/'),
+        publicPath:'/dist',
         filename:'[name].[hash:8].js'
     }
 });
