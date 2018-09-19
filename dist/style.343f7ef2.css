@@ -33,12 +33,14 @@
   border-radius: 4px;
   overflow: hidden; }
   .imageItem_img {
-    display: flex;
-    align-items: center;
     height: 200px;
     margin-bottom: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #999; }
+    border-bottom: 1px solid #999;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
     .imageItem_img img {
       width: 100%;
       height: auto; }
@@ -51,12 +53,16 @@
     width: auto;
     margin: 0 auto; }
   .imageItem_img-loading {
-    background-color: #ddd;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center; }
     .imageItem_img-loading::after {
       content: "loading...";
+      font-weight: normal;
+      text-align: center;
+      font-size: 14px;
+      margin-top: -5px;
       color: #999; }
   .imageItem_info {
     overflow: hidden;
@@ -94,6 +100,9 @@
       background-color: #eee; }
     .imageItem_copy:active {
       background-color: #ddd; }
+  .imageItem_link {
+    max-height: 100%;
+    max-width: 100%; }
 
 .uploading {
   display: none;

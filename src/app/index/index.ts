@@ -4,7 +4,6 @@ import { UploadType } from "../utils/const";
 
 export class IndexPage {
     private $uploader: JQuery;
-    private uploader: upload;
     private uploadOptions: UploadOptions;
     private parentProtocol: boolean = true;
     private currentCopyUrl: string = '';
@@ -21,10 +20,6 @@ export class IndexPage {
             quality: 100,
         }
         this.$uploader = $('#upload');
-        this.uploadOptions = {
-            type: UploadType.MEITU,
-        }
-        this.uploader = new upload(this.uploadOptions);
     }
 
     public get uploading(): boolean {
@@ -66,7 +61,6 @@ export class IndexPage {
             let files = (<any>e.target).files;
             if (files) {
                 this.uploadAll(files).then(() => {
-                    // console.log('success');
                 }).catch((e) => {
                     console.log(e);
                 })
@@ -75,7 +69,7 @@ export class IndexPage {
         document.addEventListener('copy', (e) => {
             try {
                 (<any>e).clipboardData.setData('text/plain', this.currentCopyUrl);
-                e.preventDefault(); // default behaviour is to copy any selected text
+                e.preventDefault();
             } catch (e) {
                 console.log(e);
 
@@ -84,9 +78,9 @@ export class IndexPage {
     }
 
     private async uploadAll(files: File[]) {
-        this.clearImage();
+        // this.clearImage();
         this.uploading = true;
-        this.imageCount = files.length;
+        this.imageCount+= files.length;
         for (const file of files) {
             try {
                 let imageItem = await this.doUpload(file);

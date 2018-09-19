@@ -1443,24 +1443,27 @@ var upload = function () {
                     });
                 } else if (tar_type == 'file') {
 
+                    //hzj 直接上传原图
+                    _this._up_file(target);
+                    
                     // 如果文件格式为file，在高版本浏览器中，会通过canvas进行压缩后转成base64再转成blob进行上传
                     // 在低版本浏览器中，则会直接上传原图
-                    if (!_this.lowVersion) {
-                        _this._to_b64(target, function (b64) {
+                    // if (!_this.lowVersion) {
+                    //     _this._to_b64(target, function (b64) {
 
-                            // 压缩后如果途径为qiniu，则直接使用base64进行上传
-                            // 如果为oss/s3，则转换成blob对象后上传
-                            if (_this.type == 'qiniu' || _this.type == 'meitu') {
-                                _this._up_b64_qiniu_meitu(b64);
-                            } else {
-                                var base64 = b64.indexOf('data:image') !== -1 ? b64 : 'data:image/jpeg;base64,' + b64;
-                                var file = utils._dataURLtoBlob(base64);
-                                _this._up_file(file);
-                            }
-                        });
-                    } else {
-                        _this._up_file(target);
-                    }
+                    //         // 压缩后如果途径为qiniu，则直接使用base64进行上传
+                    //         // 如果为oss/s3，则转换成blob对象后上传
+                    //         if (_this.type == 'qiniu' || _this.type == 'meitu') {
+                    //             _this._up_b64_qiniu_meitu(b64);
+                    //         } else {
+                    //             var base64 = b64.indexOf('data:image') !== -1 ? b64 : 'data:image/jpeg;base64,' + b64;
+                    //             var file = utils._dataURLtoBlob(base64);
+                    //             _this._up_file(file);
+                    //         }
+                    //     });
+                    // } else {
+                    //     _this._up_file(target);
+                    // }
                 }
             });
         }
