@@ -12,6 +12,7 @@ export class IndexPage {
     private _uploading: boolean = false;
     private _imageCount: number = 0;
     private _uploadedImageCount: number = 0;
+    private images: ImageInfo[] = [];
 
     constructor() {
         this.uploadOptions = {
@@ -57,33 +58,88 @@ export class IndexPage {
     }
 
     private bindEvent() {
+        //上传
         this.$uploader.change((e) => {
             let files = (<any>e.target).files;
             if (files) {
-                this.uploadAll(files).then(() => {
+                this.uploadAndRender(files).then(() => {
+                    this.setCache();
                 }).catch((e) => {
                     console.log(e);
                 })
             }
         })
+
+        // 复制url
         document.addEventListener('copy', (e) => {
             try {
                 (<any>e).clipboardData.setData('text/plain', this.currentCopyUrl);
+                this.toast('复制成功');
                 e.preventDefault();
             } catch (e) {
                 console.log(e);
 
             }
         })
+
+        $('.clear_all').click(() => {
+            this.clearCache();
+            this.clearImages();
+        })
+
+        $('.images').on('click', '.imageItem_close', (e) => {
+            const $target = $(e.currentTarget);
+            const index = $target.parents('.imageItem').index();
+            this.removeImage(index);
+        })
     }
 
-    private async uploadAll(files: File[]) {
+    /**
+     * 渲染所有图片
+     */
+    private renderImages() {
+        $('.images').empty();
+        (this.images || []).forEach(imageInfo => {
+            this.renderImage(imageInfo)
+        });
+    }
+
+    private toast(content: string) {
+        const $toast = $(`<div class="toast">${content}<div>`);
+        $('body').append($toast);
+        setTimeout(() => {
+            $toast.remove();
+        }, 1000);
+    }
+
+    private setCache() {
+        localStorage.setItem('cache', JSON.stringify(this.images))
+    }
+
+    private getCache() {
+        const cache = JSON.parse(localStorage.getItem('cache'));
+        this.images = cache || [];
+        this.renderImages();
+        this.uploadedImageCount = this.images.length;
+        this.imageCount = this.images.length;
+    }
+
+    private clearCache() {
+        localStorage.removeItem('cache');
+    }
+
+    /**
+     * 上传多张图片并且渲染
+     * @param files files
+     */
+    private async uploadAndRender(files: File[]) {
         // this.clearImage();
         this.uploading = true;
-        this.imageCount+= files.length;
+        this.imageCount += files.length;
         for (const file of files) {
             try {
                 let imageItem = await this.doUpload(file);
+                this.images.push(imageItem);
                 this.renderImage(imageItem);
                 this.uploadedImageCount += 1;
             } catch (error) {
@@ -93,23 +149,38 @@ export class IndexPage {
         this.uploading = false;
     }
 
+    /**
+     * 上传单个文件 并且返回图片信息
+     * @param file File
+     */
     private async doUpload(file: File) {
         let imageItem: ImageInfo = {};
         let originImageItem: ImageInfo;
         let currentImageItem: ImageInfo;
-        let options:UploadOptions = {};
+        let options: UploadOptions = {};
 
         originImageItem = await this.readImageFile(file);
-        if(this.isAutoImageSize){
-            options = Object.assign({},this.uploadOptions,{
-                width:originImageItem.originWidth,
+        if (this.isAutoImageSize) {
+            options = Object.assign({}, this.uploadOptions, {
+                width: originImageItem.originWidth,
             })
         }
-        currentImageItem = await this.uploadImage(file,options);
+        currentImageItem = await this.uploadImage(file, options);
         imageItem = Object.assign(imageItem, originImageItem, currentImageItem);
         return imageItem;
     }
 
+    private removeImage(index: number) {
+        this.images.splice(index, 1);
+        this.renderImages();
+        this.setCache();
+    }
+
+    /**
+     * 上传
+     * @param file file
+     * @param options options
+     */
     private uploadImage(file: File, options?: any): Promise<ImageInfo> {
         let uploader = new upload(Object.assign({}, this.uploadOptions, options))
         return new Promise((resolve, reject) => {
@@ -128,6 +199,10 @@ export class IndexPage {
         })
     }
 
+    /**
+     * 读取图片信息
+     * @param file file
+     */
     private readImageFile(file: File): Promise<ImageInfo> {
         let reader = new FileReader();
         reader.readAsDataURL(file)
@@ -148,12 +223,19 @@ export class IndexPage {
         })
     }
 
-    private clearImage() {
+    /**
+     * 清空页面上的图片
+     */
+    private clearImages() {
         this.uploadedImageCount = 0;
         this.imageCount = 0;
         $('.images').html('');
     }
 
+    /**
+     * 渲染单张图片
+     * @param imageInfo 图片信息
+     */
     private renderImage(imageInfo: ImageInfo) {
         let image = new Image();
         let fragment = document.createDocumentFragment();
@@ -168,6 +250,7 @@ export class IndexPage {
             <div class="imageItem_img imageItem_img-loading">
                 <a class="imageItem_link" href="${imageInfo.url}" target="_blank"></a>
             </div>
+            <a href="javascript:;" title="删除" class="imageItem_close">✕</a>
             <div class="imageItem_info">
                 <div class="imageItem_filename" title="${imageInfo.originFileName}">${imageInfo.originFileName}</div>
                 <div class="imageItem_data">
@@ -214,6 +297,7 @@ export class IndexPage {
 
     init() {
         this.bindEvent();
+        this.getCache();
     }
 }
 
