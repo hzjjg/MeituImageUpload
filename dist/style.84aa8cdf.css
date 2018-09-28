@@ -7,6 +7,23 @@
     border: 1px solid #666;
     border-radius: 4px;
     cursor: pointer; }
+    .uploader_label:hover {
+      background-color: #ddd; }
+
+.clear_all {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid #666;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #333; }
+  .clear_all:hover {
+    background-color: #ddd; }
 
 .result {
   padding: 20px;
@@ -25,6 +42,7 @@
   min-height: 400px; }
 
 .imageItem {
+  position: relative;
   float: left;
   margin: 20px;
   padding: 10px;
@@ -32,6 +50,8 @@
   border: 1px solid #333;
   border-radius: 4px;
   overflow: hidden; }
+  .imageItem:hover .imageItem_close {
+    visibility: visible; }
   .imageItem_img {
     height: 200px;
     margin-bottom: 10px;
@@ -44,6 +64,14 @@
     .imageItem_img img {
       width: 100%;
       height: auto; }
+  .imageItem_close {
+    visibility: hidden;
+    text-decoration: none;
+    color: #666;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 16px; }
   .imageItem_img-long img {
     height: 100%;
     width: auto;
@@ -110,6 +138,17 @@
   left: 20px;
   top: 20px;
   color: #999; }
+
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px; }
 
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
