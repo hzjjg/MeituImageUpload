@@ -129,8 +129,9 @@
     .imageItem_copy:active {
       background-color: #ddd; }
   .imageItem_link {
-    max-height: 100%;
-    max-width: 100%; }
+    display: block;
+    width: 100%;
+    height: 100%; }
 
 .uploading {
   display: none;
