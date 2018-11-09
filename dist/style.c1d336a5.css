@@ -10,10 +10,14 @@
     .uploader_label:hover {
       background-color: #ddd; }
 
-.clear_all {
+.opeartion {
   position: absolute;
   right: 20px;
   top: 20px;
+  display: flex; }
+
+.clear_all,
+.change_theme {
   display: inline-block;
   padding: 5px;
   border: 1px solid #666;
@@ -21,8 +25,10 @@
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
-  color: #333; }
-  .clear_all:hover {
+  color: #333;
+  margin-left: 20px; }
+  .clear_all:hover,
+  .change_theme:hover {
     background-color: #ddd; }
 
 .result {
@@ -152,6 +158,41 @@
   color: #fff;
   border-radius: 6px;
   font-size: 14px; }
+
+body.dark {
+  background: #000;
+  color: #fff; }
+  body.dark .uploader_label {
+    border: 1px solid #ccc; }
+    body.dark .uploader_label:hover {
+      background-color: #444; }
+  body.dark .clear_all,
+  body.dark .change_theme {
+    color: #ddd;
+    border: 1px solid #ccc; }
+    body.dark .clear_all:hover,
+    body.dark .change_theme:hover {
+      background-color: #444; }
+  body.dark .result {
+    color: #fff; }
+  body.dark .imageItem {
+    border: 1px solid #ccc; }
+    body.dark .imageItem_img {
+      border-bottom: 1px solid #aaa; }
+    body.dark .imageItem_copy {
+      color: #ddd;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      line-height: 24px;
+      text-decoration: none;
+      outline: none; }
+      body.dark .imageItem_copy:hover {
+        background-color: #444; }
+      body.dark .imageItem_copy:active {
+        background-color: #333; }
+  body.dark .toast {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000; }
 
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document

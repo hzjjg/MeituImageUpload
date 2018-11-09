@@ -16,10 +16,15 @@
 
 }
 
-.clear_all{
+.opeartion{
     position: absolute;
     right: 20px;
     top: 20px;
+    display: flex;
+}
+
+.clear_all,
+.change_theme{
     display: inline-block;
     padding: 5px;
     border: 1px solid #666;
@@ -28,6 +33,7 @@
     cursor: pointer;
     text-decoration: none;
     color: #333;
+    margin-left: 20px;
 
     &:hover{
         background-color: #ddd;
@@ -198,3 +204,59 @@
     font-size: 14px;
 }
 
+
+body.dark{
+    background: #000;
+    color: #fff;
+
+    .uploader{
+        &_label{
+            border: 1px solid #ccc;
+            &:hover{
+                background-color: #444;
+            }
+        }
+    }
+
+    .clear_all,
+    .change_theme{
+        color: #ddd;
+        border: 1px solid #ccc;
+        &:hover{
+            background-color: #444;
+        }
+    }
+
+    .result{
+        color: #fff;
+    }
+
+    .imageItem{
+        border: 1px solid #ccc;
+
+        &_img{
+            border-bottom: 1px solid #aaa;
+        }
+
+        &_copy{
+            color: #ddd;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            line-height: 24px;
+            text-decoration: none;
+            outline: none;
+            &:hover{
+                background-color: #444;
+            }
+            &:active{
+                background-color: #333
+            }
+        }
+        
+    }
+
+    .toast{
+        background-color: rgba($color: #fff, $alpha: .6);
+        color: #000;
+    }
+}

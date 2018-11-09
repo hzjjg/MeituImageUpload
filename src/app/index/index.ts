@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { upload, UploadOptions } from '../../../assets/upload.es';
-import { UploadType } from "../utils/const";
+import { UploadType, Theme } from "../const/index";
 
 export class IndexPage {
     private $uploader: JQuery;
@@ -11,8 +11,9 @@ export class IndexPage {
 
     private _uploading: boolean = false;
     private _imageCount: number = 0;
-    private _uploadedImageCount: number = 0;
     private images: ImageInfo[] = [];
+
+    private theme:Theme = Theme.Light;
 
     constructor() {
         this.uploadOptions = {
@@ -20,7 +21,7 @@ export class IndexPage {
             type: UploadType.MEITU,
             quality: 100,
         }
-        this.$uploader = $('#upload');
+        this.$uploader = <JQuery<HTMLInputElement>>$('#upload');
     }
 
     public get uploading(): boolean {
@@ -37,24 +38,19 @@ export class IndexPage {
     }
 
 
-    public get imageCount(): number {
+    public get totalCount(): number {
         return this._imageCount
     }
 
 
-    public set imageCount(v: number) {
+    public set totalCount(v: number) {
         $('.result_total').html(<any>v);
         this._imageCount = v;
     }
 
 
-    public get uploadedImageCount(): number {
-        return this._uploadedImageCount
-    }
-
-    public set uploadedImageCount(v: number) {
+    public set successedCount(v: number) {
         $('.result_completed').html(<any>v);
-        this._uploadedImageCount = v;
     }
 
     private bindEvent() {
@@ -64,6 +60,7 @@ export class IndexPage {
             if (files) {
                 this.uploadAndRender(files).then(() => {
                     this.setCache();
+                    this.$uploader.val('');
                 }).catch((e) => {
                     console.log(e);
                 })
@@ -82,15 +79,22 @@ export class IndexPage {
             }
         })
 
+        // 清空纪录
         $('.clear_all').click(() => {
             this.clearCache();
             this.clearImages();
         })
 
+        //删除图片
         $('.images').on('click', '.imageItem_close', (e) => {
             const $target = $(e.currentTarget);
             const index = $target.parents('.imageItem').index();
             this.removeImage(index);
+        })
+
+        // 更改主题
+        $('.change_theme').click(()=>{
+            this.setTheme(this.theme === Theme.Light?Theme.Dark:Theme.Light)
         })
     }
 
@@ -102,6 +106,11 @@ export class IndexPage {
         (this.images || []).forEach(imageInfo => {
             this.renderImage(imageInfo)
         });
+    }
+
+    private setTheme(theme:Theme){
+        this.theme = theme;
+        $('body').attr('class',this.theme);
     }
 
     private toast(content: string) {
@@ -120,8 +129,8 @@ export class IndexPage {
         const cache = JSON.parse(localStorage.getItem('cache'));
         this.images = cache || [];
         this.renderImages();
-        this.uploadedImageCount = this.images.length;
-        this.imageCount = this.images.length;
+        this.successedCount = this.images.length;
+        this.totalCount = this.images.length;
     }
 
     private clearCache() {
@@ -135,13 +144,13 @@ export class IndexPage {
     private async uploadAndRender(files: File[]) {
         // this.clearImage();
         this.uploading = true;
-        this.imageCount += files.length;
+        this.totalCount += files.length;
         for (const file of files) {
             try {
                 let imageItem = await this.doUpload(file);
                 this.images.push(imageItem);
                 this.renderImage(imageItem);
-                this.uploadedImageCount += 1;
+                this.successedCount = this.images.length;
             } catch (error) {
                 console.log(error);
             }
@@ -173,6 +182,8 @@ export class IndexPage {
     private removeImage(index: number) {
         this.images.splice(index, 1);
         this.renderImages();
+        this.totalCount = this.images.length;
+        this.successedCount = this.images.length;
         this.setCache();
     }
 
@@ -227,9 +238,10 @@ export class IndexPage {
      * 清空页面上的图片
      */
     private clearImages() {
-        this.uploadedImageCount = 0;
-        this.imageCount = 0;
-        $('.images').html('');
+        this.images = [];
+        this.successedCount = 0;
+        this.totalCount = 0;
+        this.renderImages()
     }
 
     /**

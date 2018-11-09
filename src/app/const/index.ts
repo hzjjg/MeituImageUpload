@@ -7,3 +7,8 @@ export enum UploadType {
     AMAZON = 2,
     MEITU = 3
 }
+
+export enum Theme{
+    Light = 'light',
+    Dark = 'dark',
+}
